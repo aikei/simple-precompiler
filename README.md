@@ -1,6 +1,6 @@
 # simple-precompiler
 A simple Javascript precompiler. I intended it for node.js, but it can be used for any javascript framework. Usage: Surround parts of your code you want to conditionally compile in the following way:
-```
+```javascript
 //SIMP_PREC TEST 
 function TestFunction() 
 { 
@@ -17,7 +17,7 @@ If you don't want to compile this code, you don't include this directive:
 simple-precompiler
 ```
 In this case, the result of precompilation will be the file with the same name but with the TEST block commented out:
-```
+```javascript
 //SIMP_PREC TEST 
 //function TestFunction() 
 //{ 
