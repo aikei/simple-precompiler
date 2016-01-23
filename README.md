@@ -35,11 +35,11 @@ In this case, the result of precompilation will be the file with the same name b
 //} 
 //SIMP_PREC_END TEST
 ```
-Above examples expect you to run simple-precompiler from the root directory of your project. Simple-precompiler automatically walks through all .js files in the root directory and in all subdirectories. Should you wish to set the directory to walk manually, you must do this:
+Above examples expect you to run simple-precompiler from the root directory of your project. Simple-precompiler automatically walks through all .js files in the root directory and in all subdirectories. Should you wish to set the directory to walk manually, you would do this:
 ```
 simple-precompiler -dir /path/to/my/dir
 ```
-To exclude some directories from the precompiling you do this:
+To exclude some directories from the precompiling you do this (the node_modules directory is excluded by default):
 ```
 simple-precompiler -exclude_dirs /path/to/my/dir /another/dir
 ```
