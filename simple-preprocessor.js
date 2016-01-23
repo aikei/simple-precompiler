@@ -83,7 +83,7 @@ function PreprocessString(str)
       {        
          if (!foundPresentDirective && !foundAbsentDirective && strs[i].length > 2)
          {
-            if (words[0] === "//SIMP_PREC" && words[1].length > 0)
+            if ((words[0] === "//SIMP_PREC" || words[0] === "//SIMP_PREP") && words[1].length > 0)
             {
                words[1] = words[1].trim()
                if (directives.has(words[1]))
@@ -101,7 +101,7 @@ function PreprocessString(str)
             }
          }
 
-         if (words[0] == "//SIMP_PREC_END")
+         if (words[0] == "//SIMP_PREC_END" || words[0] == "//SIMP_PREP_END")
          {
             foundAbsentDirective = false
             foundPresentDirective = false
