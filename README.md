@@ -1,6 +1,6 @@
 # simple-precompiler
 
-A simple Javascript precompiler. I intended it for node.js, but it can be used for any javascript framework.
+A simple Javascript preprocessor. I intended it for node.js, but it can be used for any javascript framework.
 
 ## Installation
 
