@@ -1,4 +1,4 @@
-# simple-precompiler
+# simple-preprocessor
 
 A simple Javascript preprocessor. I intended it for node.js, but it can be used for any javascript framework.
 
