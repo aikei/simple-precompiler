@@ -1,0 +1,32 @@
+{
+  "name": "simple-precompiler",
+  "version": "1.0.5",
+  "description": "A simple javascript preprocessor with easy to understand mechanics.",
+  "main": "simple-precompiler.js",
+  "dependencies": {
+    "walk": "^2.3.9"
+  },
+  "devDependencies": {},
+  "bin" : { "simple-precompiler" : "simple-precompiler.js" },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aikei/simple-precompiler.git"
+  },
+  "keywords": [
+    "precompiler",
+    "preprocessor",
+    "simple",
+    "easy",
+    "lightweight",
+    "javascript"
+  ],
+  "author": "aikei",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/aikei/simple-precompiler/issues"
+  },
+  "homepage": "https://github.com/aikei/simple-precompiler#readme"
+}
