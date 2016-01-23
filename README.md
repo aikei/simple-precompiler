@@ -5,7 +5,7 @@ A simple Javascript preprocessor. I intended it for node.js, but it can be used 
 ## Installation
 
 ```
-npm install simple-precompiler
+npm install -g simple-precompiler
 ```
 
 ## Usage
