@@ -1,4 +1,12 @@
 # simple-precompiler
+
+## Installation
+
+```
+npm install simple-precompiler
+```
+
+## Usage
 A simple Javascript precompiler. I intended it for node.js, but it can be used for any javascript framework. Usage: Surround parts of your code you want to conditionally compile in the following way:
 ```javascript
 //SIMP_PREC TEST 
