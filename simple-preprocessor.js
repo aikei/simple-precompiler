@@ -10,11 +10,10 @@ var path = require('path')
 var walk = require('walk')
 
 var directives = new Set()
-var excludeDirs = new Set([ 'node_modules' ])
+var excludeDirs = [ 'node_modules' ]
 var foundPresentDirective = false
 var foundAbsentDirective = false
 var dirToWalk = '.'
-var includeSubdirectories = true
 
 var lookFileDone = false
 
@@ -44,7 +43,7 @@ for (var i = 2; i < process.argv.length; i++)
       while (i < process.argv.length && process.argv[i].charAt(0) != '-')
       {
          console.log('excluding directory',process.argv[i])
-         excludeDirs.add(process.argv[i])
+         excludeDirs.push(process.argv[i])
          i++
       } 
    }    
@@ -55,21 +54,55 @@ for (var i = 2; i < process.argv.length; i++)
          console.log('Error! No directives specified after -D')
          process.exit()
       }       
-      i++
-      while (i < process.argv.length && process.argv[i].charAt(0) != '-')
+      do 
       {
-         console.log('adding directive',process.argv[i])
-         directives.add(process.argv[i])
          i++
-      } 
-   }
-   else if (process.argv[i] === 'no_subdirs')
-   {
-      includeSubdirectories = false
+         console.log('adding directive',process.argv[i])
+         directives.add(process.argv[i])         
+      } while (i+1 < process.argv.length && process.argv[i+1].charAt(0) != '-')
    }
 }
 
-var walker = walk.walk(dirToWalk, { followLinks: includeSubdirectories })
+try
+{
+   var config = fs.readFileSync(dirToWalk+'/simp-prep-config.json')
+   try
+   {
+      config = JSON.parse(config)
+
+      if (config.D)
+      {
+         for (var key in config.D)
+         {
+            if (config.D[key])
+               directives.add(key)
+         }
+      }
+      
+      if (config.dir)
+      {
+         dirToWalk = config.dir
+      }
+      
+      if (config.exclude_dirs)
+      {
+         for (var i = 0; i < config.exclude_dirs.length; i++)
+         {
+            excludeDirs.push(config.exclude_dirs[i])
+         }
+      }
+   }
+   catch(err)
+   {
+      console.log('simp-prep-config.json parse error:',err)
+   }
+}
+catch(err)
+{
+   console.log('warning! simp-prep-config.json not found')
+}
+
+var walker = walk.walk(dirToWalk, { followLinks: true, filters : excludeDirs })
 
 function PreprocessString(str)
 {
@@ -133,15 +166,6 @@ walker.on('file', function (root, fileStat, next)
    var exclude = false
    
    var folders = root.split('\\')
-
-   for (var i = 0; i < folders.length; i++)
-   {
-      if (excludeDirs.has(folders[i]))
-      {
-         exclude = true
-         break
-      }
-   }
    
    if (!exclude)
    {
