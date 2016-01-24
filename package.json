@@ -1,6 +1,6 @@
 {
   "name": "simple-preprocessor",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "A simple javascript preprocessor with easy to understand mechanics.",
   "main": "simple-preprocessor.js",
   "dependencies": {
