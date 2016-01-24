@@ -9,7 +9,6 @@ npm install -g simple-preprocessor
 ```
 
 ## Usage
-### Without Config File
 Surround parts of your code you want to conditionally compile in the following way:
 ```javascript
 //SIMP_PREP TEST 
@@ -19,6 +18,7 @@ function TestFunction()
 } 
 //SIMP_PREP_END TEST
 ```
+### Without Config File
 Now, in order to compile this code you will need to run simple-preprocessor in your source directory and specify the TEST directive:
 ```
 simple-preprocessor -D TEST
