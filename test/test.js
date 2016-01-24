@@ -1,3 +1,5 @@
+(function() {
+
 'use strict'
 
 var child_process = require('child_process')
@@ -60,5 +62,6 @@ ExecuteTest(4,"config file with { 'D' : { 'TEST' : true } }", null,"test/simp-pr
 ExecuteTest(5,"config file with { 'D' : { 'TEST' : true }, 'exclude_dirs' : [ 'testDir' ] }", null,"test/simp-prep-config-test-D-exclude_dirs.json", "TEST", "NONE")
 ExecuteTest(6,"config file with { 'D' : { 'RELEASE' : true }, 'dir' : 'test/testDir' }", null,"test/simp-prep-config-test-D-dir.json", "NONE", "RELEASE")
 
-
 console.log('succedeed:',success,'| failed:',fail)
+
+}())
