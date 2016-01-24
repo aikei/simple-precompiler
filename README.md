@@ -28,7 +28,7 @@ If you don't want to compile this block of code, then don't include this directi
 ```
 simple-preprocessor
 ```
-In this case, the result of the preprocessing will be a file with the same name but with the TEST block commented out:
+In this case, the result of the preprocessing will be a file with the same name but with the `TEST` block commented out:
 ```javascript
 //SIMP_PREP TEST 
 //function TestFunction() 
