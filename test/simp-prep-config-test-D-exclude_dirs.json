@@ -1,0 +1,8 @@
+{
+   "D" :
+   {
+      "TEST" : true,
+      "RELEASE" : false
+   },
+   "exclude_dirs" : [ "testDir" ]
+}

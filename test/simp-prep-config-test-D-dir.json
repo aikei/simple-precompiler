@@ -1,0 +1,8 @@
+{
+   "D" :
+   {
+      "TEST" : false,
+      "RELEASE" : true
+   },
+   "dir" : "test/testDir"
+}
