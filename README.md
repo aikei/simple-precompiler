@@ -45,7 +45,7 @@ To exclude some directories from the preprocessing you do this (the node_modules
 ```
 simple-preprocessor -exclude_dirs dirname anotherDirName
 ```
-Directories with these names will be excluded from the preprocessing, irrespective of their relative path (i.e. ./dir/dirname, ./dir and dir/dir2/anotherDirName will all be excluded.
+Directories with these names will be excluded from the preprocessing, irrespective of their relative path (i.e. `./dir/dirname`, `./dirname`, `dir/dir2/anotherDirName` etc. will all be excluded.
 ### With Config File
 It's easier however to create a config file named `simp-prep-config.json` in the root directory of your project. This is a JSON formatted file which supports all above directives. Here is an example:
 ```json
