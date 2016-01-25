@@ -41,7 +41,7 @@ Above examples expect you to run simple-preprocessor from the root directory of 
 ```
 simple-preprocessor -dir path/to/my/dir
 ```
-To exclude some directories from the preprocessing you do this (the node_modules directory is excluded by default):
+To exclude some directories from the preprocessing you do this (the `node_modules` directory is excluded by default):
 ```
 simple-preprocessor -exclude_dirs dirname anotherDirName
 ```
