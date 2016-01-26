@@ -9,13 +9,12 @@ var fs = require('fs')
 var path = require('path')
 var walk = require('walk')
 
-var directives = new Set()
+var directives = {}
 var excludeDirs = [ 'node_modules' ]
 var foundPresentDirective = false
 var foundAbsentDirective = false
 var dirToWalk = '.'
 
-var lookFileDone = false
 
 for (var i = 2; i < process.argv.length; i++)
 {
@@ -58,7 +57,7 @@ for (var i = 2; i < process.argv.length; i++)
       {
          i++
          console.log('adding directive',process.argv[i])
-         directives.add(process.argv[i])         
+         directives[process.argv[i]] = true
       } while (i+1 < process.argv.length && process.argv[i+1].charAt(0) != '-')
    }
 }
@@ -75,7 +74,7 @@ try
          for (var key in config.D)
          {
             if (config.D[key])
-               directives.add(key)
+               directives[key] = true
          }
       }
       
@@ -119,7 +118,7 @@ function PreprocessString(str)
             if ((words[0] === "//SIMP_PREC" || words[0] === "//SIMP_PREP") && words[1].length > 0)
             {
                words[1] = words[1].trim()
-               if (directives.has(words[1]))
+               if (directives[words[1]])
                {
                   console.log('found present directive',words[1])
                   foundPresentDirective = true
