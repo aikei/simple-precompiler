@@ -106,7 +106,7 @@ var walker = walk.walk(dirToWalk, { followLinks: true, filters : excludeDirs })
 function PreprocessString(str)
 {
    var strs = str.split('\n')
-   iCycle:
+   
    for (var i = 0; i < strs.length; i++)
    {
       var words = strs[i].split(" ")
@@ -121,15 +121,14 @@ function PreprocessString(str)
                if (directives[words[1]])
                {
                   console.log('found present directive',words[1])
-                  foundPresentDirective = true
-                  continue iCycle
+                  foundPresentDirective = true                 
                }
                else
                {
                   console.log('found absent directive',words[1])
                   foundAbsentDirective = true
-                  continue iCycle
                }
+               continue
             }
          }
 
