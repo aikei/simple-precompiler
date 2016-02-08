@@ -133,7 +133,7 @@ function PreprocessString(str)
                continue
             }
          }
-         console.log("leftWord = [",leftWord,"]")
+
          if (leftWord === "//else")
          {
             foundElse = true
