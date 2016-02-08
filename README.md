@@ -91,6 +91,8 @@ It's easier however to create a config file named `simp-prep-config.json` in the
 }
 ```
 Then you just run `simple-preprocessor` in the directory with the `simp-prep-config.json` file.
+### Old syntax
+Old syntax with //SIMP_PREP DIRECTIVE and //SIMP_PREP_END DIRECTIVE is still supported, but deprecated. Please, use new syntax.
 ### Nested directives
 Nested directives like those shown below are not supported yet:
 //ifdef TEST 
