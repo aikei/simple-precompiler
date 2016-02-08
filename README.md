@@ -61,6 +61,7 @@ function TestFunction2()
 //endif
 ```
 Of course, you can omit the else block altogether, and this syntax is perfectly valid:
+```javascript
 //ifdef TEST 
 function TestFunction() 
 { 
@@ -92,9 +93,10 @@ It's easier however to create a config file named `simp-prep-config.json` in the
 ```
 Then you just run `simple-preprocessor` in the directory with the `simp-prep-config.json` file.
 ### Old syntax
-Old syntax with //SIMP_PREP DIRECTIVE and //SIMP_PREP_END DIRECTIVE is still supported, but deprecated. Please, use new syntax.
+Old syntax with `//SIMP_PREP DIRECTIVE` and `//SIMP_PREP_END DIRECTIVE` is still supported, but deprecated. Please, use new syntax.
 ### Nested directives
 Nested directives like those shown below are not supported yet:
+```javascript
 //ifdef TEST 
 function TestFunction() 
 {
@@ -103,6 +105,7 @@ function TestFunction()
 //endif    
 }
 //endif
+```
 The behavior is undefined is this case.
 ### Test
 To test run
