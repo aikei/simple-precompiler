@@ -4,20 +4,29 @@ var Execute = function()
    return "NONE"
 }
 
-//SIMP_PREP TEST
+//ifdef TEST
 //Execute = function()
 //{
 //   console.log("TEST")
 //   return "TEST"
 //}
-//SIMP_PREP_END TEST
+//endif
 
-//SIMP_PREP RELEASE
+//ifdef RELEASE
 //Execute = function()
 //{
 //   console.log("RELEASE")
 //   return "RELEASE"
 //}
-//SIMP_PREP_END RELEASE
+//endif
 
+//ifdef IFTEST
+//module.exports = function()
+//{
+//   console.log("IFTEST")
+//   return "IFTEST"
+//}   
+//else
 module.exports = Execute
+//endif
+

@@ -61,6 +61,7 @@ ExecuteTest(3,"command line with -D RELEASE -dir test/testDir", "-D RELEASE -dir
 ExecuteTest(4,"config file with { 'D' : { 'TEST' : true } }", null,"test/simp-prep-config-test-D.json", "TEST", "TEST")
 ExecuteTest(5,"config file with { 'D' : { 'TEST' : true }, 'exclude_dirs' : [ 'testDir' ] }", null,"test/simp-prep-config-test-D-exclude_dirs.json", "TEST", "NONE")
 ExecuteTest(6,"config file with { 'D' : { 'RELEASE' : true }, 'dir' : 'test/testDir' }", null,"test/simp-prep-config-test-D-dir.json", "NONE", "RELEASE")
+ExecuteTest(7,"command line with -D IFTEST", "-D IFTEST",null, "IFTEST", "NONE")
 
 //clean test files to defaults
 child_process.execSync(preprocessCmd)

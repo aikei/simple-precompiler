@@ -13,6 +13,7 @@ var directives = {}
 var excludeDirs = [ 'node_modules' ]
 var foundPresentDirective = false
 var foundAbsentDirective = false
+var foundElse = false
 var dirToWalk = '.'
 
 
@@ -112,10 +113,11 @@ function PreprocessString(str)
       var words = strs[i].split(" ")
       
       if (strs[i].charAt(0) === "/" && strs[i].charAt(1) === "/")
-      {        
+      {
+         var leftWord = words[0].trim()
          if (!foundPresentDirective && !foundAbsentDirective && strs[i].length > 2)
          {
-            if ((words[0] === "//SIMP_PREC" || words[0] === "//SIMP_PREP") && words[1].length > 0)
+            if ((leftWord === "//SIMP_PREC" || leftWord === "//SIMP_PREP" || leftWord === "//ifdef") && words[1].length > 0)
             {
                words[1] = words[1].trim()
                if (directives[words[1]])
@@ -131,22 +133,30 @@ function PreprocessString(str)
                continue
             }
          }
-
-         if (words[0] == "//SIMP_PREC_END" || words[0] == "//SIMP_PREP_END")
+         console.log("leftWord = [",leftWord,"]")
+         if (leftWord === "//else")
          {
+            foundElse = true
+            continue
+         }
+         
+         if (leftWord == "//SIMP_PREC_END" || leftWord == "//SIMP_PREP_END" || leftWord === "//endif")
+         {
+            foundElse = false
             foundAbsentDirective = false
             foundPresentDirective = false
          }           
       }
       
-      if (foundPresentDirective)
+      if ((foundPresentDirective && !foundElse) || (foundAbsentDirective && foundElse))
       {
          if (words[0].charAt(0) === "/" && words[0].charAt(1) === "/")
          {
             words[0] = words[0].slice(2)
          }
       }
-      else if (foundAbsentDirective)
+      
+      if ((foundAbsentDirective && !foundElse) || (foundPresentDirective && foundElse))
       {
          if (words[0].charAt(0) != "/" || words[0].charAt(1) != "/")
          {
