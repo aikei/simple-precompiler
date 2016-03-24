@@ -15,7 +15,9 @@ var foundPresentDirective = false
 var foundAbsentDirective = false
 var foundElse = false
 var dirToWalk = '.'
+var isWin = (process.platform === "win32")
 
+console.log("start; args = "+process.argv)
 
 for (var i = 2; i < process.argv.length; i++)
 {
@@ -61,7 +63,41 @@ for (var i = 2; i < process.argv.length; i++)
          directives[process.argv[i]] = true
       } while (i+1 < process.argv.length && process.argv[i+1].charAt(0) != '-')
    }
+   else if (process.argv[i] === 'init')
+   {
+      try 
+      {
+         fs.accessSync('./simp-prep-config.json',fs.F_OK)
+         console.log('simp-prep-config.json file already exists. use force-init to remove it with the new one.');
+      }
+      catch(err)
+      {
+         CreateConfig()
+      }
+      return
+   }
+   else if (process.argv[i] === 'force-init')
+   {
+      CreateConfig()
+      return
+   }
 }
+
+function CreateConfig()
+{
+      const initConfig =
+      '{\n'+
+         '   "D" :\n'+
+         '   {\n'+
+         '      \n'+
+         '   },\n'+
+         '   "dir" : "",\n'+
+         '   "exclude_dirs" : [ ]\n'+
+      '}\n'
+      fs.writeFileSync('./simp-prep-config.json',initConfig)  
+}
+
+console.log("dirToWalk = "+dirToWalk)
 
 try
 {
@@ -117,21 +153,39 @@ function PreprocessString(str)
          var leftWord = words[0].trim()
          if (!foundPresentDirective && !foundAbsentDirective && strs[i].length > 2)
          {
-            if ((leftWord === "//SIMP_PREC" || leftWord === "//SIMP_PREP" || leftWord === "//ifdef") && words[1].length > 0)
+            if (words[1] && words[1].length > 0)
             {
                words[1] = words[1].trim()
-               if (directives[words[1]])
+               if (leftWord === "//SIMP_PREC" || leftWord === "//SIMP_PREP" || leftWord === "//ifdef")
                {
-                  console.log('found present directive',words[1])
-                  foundPresentDirective = true                 
+                  if (directives[words[1]])
+                  {
+                     console.log('found present ifdef directive',words[1])
+                     foundPresentDirective = true                 
+                  }
+                  else
+                  {
+                     console.log('found absent ifdef directive',words[1])
+                     foundAbsentDirective = true
+                  }
+                  continue
+               }
+            }
+            /*
+            else if (leftWord === "//ifndef")
+            {
+               if (!directives[words[1])
+               {
+                  console.log('found absent ifndef directive',words[1])
+                  foundPresentDirective = true
                }
                else
                {
-                  console.log('found absent directive',words[1])
+                  console.log('found present ifndef directive',words[1])
                   foundAbsentDirective = true
                }
-               continue
             }
+            */
          }
 
          if (leftWord === "//else")
@@ -173,7 +227,10 @@ walker.on('file', function (root, fileStat, next)
 {
    var exclude = false
    
-   var folders = root.split('\\')
+   if (isWin)
+      var folders = root.split('\\')
+   else
+      folders = root.split('/')
    
    if (!exclude)
    {
@@ -181,7 +238,6 @@ walker.on('file', function (root, fileStat, next)
       
       if (path.extname(fileStat.name) == '.js')
       {
-
          fs.readFile(fileName, { enconding : 'utf8' }, function(err, data)
          {
             var str = data.toString()
