@@ -14,7 +14,7 @@ var excludeDirs = [ 'node_modules' ]
 var foundPresentDirective = false
 var foundAbsentDirective = false
 var foundElse = false
-var dirToWalk = '.'
+var dirToWalk = []
 var isWin = (process.platform === "win32")
 
 console.log("start; args = "+process.argv)
@@ -23,20 +23,22 @@ for (var i = 2; i < process.argv.length; i++)
 {
    if (process.argv[i] === '-dir')
    {
-      if (process.argv.length <= i+1)
+      if (process.argv.length <= i+1 ||  process.argv[i+1].charAt(0) === '-')
       {
          console.log('Error! No directory specified after -dir')
          process.exit()
       }
-      else
+      i++
+      while (i < process.argv.length && process.argv[i].charAt(0) != '-')
       {
+         console.log("adding dir to walk: "+process.argv[i])
+         dirToWalk.push(process.argv[i])
          i++
-         dirToWalk = process.argv[i]
       }
    }
    else if (process.argv[i] === '-exclude_dirs')
    {
-      if (process.argv.length <= i+1)
+      if (process.argv.length <= i+1 ||  process.argv[i+1].charAt(0) === '-')
       {
          console.log('Error! No directories specified after -exclude_dirs')
          process.exit()
@@ -51,7 +53,7 @@ for (var i = 2; i < process.argv.length; i++)
    }    
    else if (process.argv[i] === '-D')
    {     
-      if (process.argv.length <= i+1)
+      if (process.argv.length <= i+1 ||  process.argv[i+1].charAt(0) === '-')
       {
          console.log('Error! No directives specified after -D')
          process.exit()
@@ -91,8 +93,8 @@ function CreateConfig()
          '   {\n'+
          '      \n'+
          '   },\n'+
-         '   "dir" : "",\n'+
-         '   "exclude_dirs" : [ ]\n'+
+         '   "dir" : [],\n'+
+         '   "exclude_dirs" : [ "node_modules" ]\n'+
       '}\n'
       fs.writeFileSync('./simp-prep-config.json',initConfig)  
 }
@@ -101,7 +103,7 @@ console.log("dirToWalk = "+dirToWalk)
 
 try
 {
-   var config = fs.readFileSync(dirToWalk+'/simp-prep-config.json')
+   var config = fs.readFileSync('./simp-prep-config.json')
    try
    {
       config = JSON.parse(config)
@@ -115,9 +117,13 @@ try
          }
       }
       
-      if (config.dir)
+      if (Array.isArray(config.dir))
       {
-         dirToWalk = config.dir
+         dirToWalk = dirToWalk.concat(config.dir)
+      }
+      else if (typeof config.dir === "string")
+      {
+         dirToWalk.push(config.dir)
       }
       
       if (config.exclude_dirs)
@@ -138,129 +144,136 @@ catch(err)
    console.log('warning! simp-prep-config.json not found')
 }
 
-var walker = walk.walk(dirToWalk, { followLinks: true, filters : excludeDirs })
+if (dirToWalk.length === 0)
+   dirToWalk.push(".")
 
-function PreprocessString(str)
+for (var i = 0; i < dirToWalk.length; i++)
 {
-   var strs = str.split('\n')
-   
-   for (var i = 0; i < strs.length; i++)
-   {
-      var words = strs[i].split(" ")
-      
-      if (strs[i].charAt(0) === "/" && strs[i].charAt(1) === "/")
+   (function(curDir) {
+      var walker = walk.walk(curDir, { followLinks: true, filters : excludeDirs })
+
+      function PreprocessString(str)
       {
-         var leftWord = words[0].trim()
-         if (!foundPresentDirective && !foundAbsentDirective && strs[i].length > 2)
+         var strs = str.split('\n')
+         
+         for (var i = 0; i < strs.length; i++)
          {
-            if (words[1] && words[1].length > 0)
+            var words = strs[i].split(" ")
+            
+            if (strs[i].charAt(0) === "/" && strs[i].charAt(1) === "/")
             {
-               words[1] = words[1].trim()
-               if (leftWord === "//SIMP_PREC" || leftWord === "//SIMP_PREP" || leftWord === "//ifdef")
+               var leftWord = words[0].trim()
+               if (!foundPresentDirective && !foundAbsentDirective && strs[i].length > 2)
                {
-                  if (directives[words[1]])
+                  if (words[1] && words[1].length > 0)
                   {
-                     console.log('found present ifdef directive',words[1])
-                     foundPresentDirective = true                 
+                     words[1] = words[1].trim()
+                     if (leftWord === "//SIMP_PREC" || leftWord === "//SIMP_PREP" || leftWord === "//ifdef")
+                     {
+                        if (directives[words[1]])
+                        {
+                           console.log('found present ifdef directive',words[1])
+                           foundPresentDirective = true                 
+                        }
+                        else
+                        {
+                           console.log('found absent ifdef directive',words[1])
+                           foundAbsentDirective = true
+                        }
+                        continue
+                     }
                   }
-                  else
+                  /*
+                  else if (leftWord === "//ifndef")
                   {
-                     console.log('found absent ifdef directive',words[1])
-                     foundAbsentDirective = true
+                     if (!directives[words[1])
+                     {
+                        console.log('found absent ifndef directive',words[1])
+                        foundPresentDirective = true
+                     }
+                     else
+                     {
+                        console.log('found present ifndef directive',words[1])
+                        foundAbsentDirective = true
+                     }
                   }
+                  */
+               }
+
+               if (leftWord === "//else")
+               {
+                  foundElse = true
                   continue
                }
+               
+               if (leftWord == "//SIMP_PREC_END" || leftWord == "//SIMP_PREP_END" || leftWord === "//endif")
+               {
+                  foundElse = false
+                  foundAbsentDirective = false
+                  foundPresentDirective = false
+               }           
             }
-            /*
-            else if (leftWord === "//ifndef")
+            
+            if ((foundPresentDirective && !foundElse) || (foundAbsentDirective && foundElse))
             {
-               if (!directives[words[1])
+               if (words[0].charAt(0) === "/" && words[0].charAt(1) === "/")
                {
-                  console.log('found absent ifndef directive',words[1])
-                  foundPresentDirective = true
-               }
-               else
-               {
-                  console.log('found present ifndef directive',words[1])
-                  foundAbsentDirective = true
+                  words[0] = words[0].slice(2)
                }
             }
-            */
+            
+            if ((foundAbsentDirective && !foundElse) || (foundPresentDirective && foundElse))
+            {
+               if (words[0].charAt(0) != "/" || words[0].charAt(1) != "/")
+               {
+                  words[0] = "//"+words[0]
+               }             
+            }
+            strs[i] = words.join(' ')
          }
+         return strs.join('\n')
+      }
 
-         if (leftWord === "//else")
+
+      walker.on('file', function (root, fileStat, next)
+      {
+         var exclude = false
+         
+         if (isWin)
+            var folders = root.split('\\')
+         else
+            folders = root.split('/')
+         
+         if (!exclude)
          {
-            foundElse = true
-            continue
+            var fileName = path.resolve(root, fileStat.name)
+            
+            if (path.extname(fileStat.name) == '.js')
+            {
+               fs.readFile(fileName, { enconding : 'utf8' }, function(err, data)
+               {
+                  var str = data.toString()
+                  console.log('preprocessing file',fileName)
+                  str = PreprocessString(str)
+                  fs.writeFile(fileName,str)
+               })
+            }
          }
          
-         if (leftWord == "//SIMP_PREC_END" || leftWord == "//SIMP_PREP_END" || leftWord === "//endif")
-         {
-            foundElse = false
-            foundAbsentDirective = false
-            foundPresentDirective = false
-         }           
-      }
-      
-      if ((foundPresentDirective && !foundElse) || (foundAbsentDirective && foundElse))
-      {
-         if (words[0].charAt(0) === "/" && words[0].charAt(1) === "/")
-         {
-            words[0] = words[0].slice(2)
-         }
-      }
-      
-      if ((foundAbsentDirective && !foundElse) || (foundPresentDirective && foundElse))
-      {
-         if (words[0].charAt(0) != "/" || words[0].charAt(1) != "/")
-         {
-            words[0] = "//"+words[0]
-         }             
-      }
-      strs[i] = words.join(' ')
-   }
-   return strs.join('\n')
-}
+         next()
+      })
 
-
-walker.on('file', function (root, fileStat, next)
-{
-   var exclude = false
-   
-   if (isWin)
-      var folders = root.split('\\')
-   else
-      folders = root.split('/')
-   
-   if (!exclude)
-   {
-      var fileName = path.resolve(root, fileStat.name)
-      
-      if (path.extname(fileStat.name) == '.js')
+      walker.on('error', function(root, nodeStatsArray, next)
       {
-         fs.readFile(fileName, { enconding : 'utf8' }, function(err, data)
+         nodeStatsArray.forEach(function(n)
          {
-            var str = data.toString()
-            console.log('preprocessing file',fileName)
-            str = PreprocessString(str)
-            fs.writeFile(fileName,str)
+            console.error("[ERROR] "+n.name)
+            console.error(n.error.message || (n.error.code + ": " + n.error.path))
          })
-      }
-   }
-   
-	next()
-})
-
-walker.on('error', function(root, nodeStatsArray, next)
-{
-   nodeStatsArray.forEach(function(n)
-   {
-      console.error("[ERROR] "+n.name)
-      console.error(n.error.message || (n.error.code + ": " + n.error.path))
-   })
-   next()
-})
-
+         next()
+      })
+   })(dirToWalk[i])
+}
 
 process.on('exit', function()
 {

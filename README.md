@@ -69,9 +69,9 @@ function TestFunction()
 }
 //endif
 ```
-Above examples expect you to run simple-preprocessor from the root directory of your project. Simple-preprocessor automatically walks through all `.js` files in the root directory and in all subdirectories. Should you wish to set the directory to walk manually, you would do this:
+Above examples expect you to run simple-preprocessor from the root directory of your project. Simple-preprocessor automatically walks through all `.js` files in the root directory and in all subdirectories. Should you wish to set the directory (or directories) to walk manually, you would do this:
 ```
-simple-preprocessor -dir path/to/my/dir
+simple-preprocessor -dir path/to/my/dir path/to/another/dir
 ```
 To exclude some directories from the preprocessing you do this (the `node_modules` directory is excluded by default):
 ```
@@ -79,7 +79,7 @@ simple-preprocessor -exclude_dirs dirname anotherDirName
 ```
 Directories with these names will be excluded from the preprocessing, irrespective of their relative path (i.e. `./dir/dirname`, `./dirname`, `dir/dir2/anotherDirName` etc. will all be excluded.
 ### With Config File
-It's easier however to create a config file named `simp-prep-config.json` in the root directory of your project. This is a JSON formatted file which supports all above directives. Here is an example:
+It's easier however to create a config file named *simp-prep-config.json* in the root directory of your project. You can use command `simple-preprocessor init` to automatically create a sample config file in the current directory. *simp-prep-config.json* is a JSON formatted file which supports all above directives. Here is an example:
 ```json
 {
    "D" :
@@ -87,11 +87,14 @@ It's easier however to create a config file named `simp-prep-config.json` in the
       "TEST" : false,
       "RELEASE" : true
    },
-   "dir" : "testDir",
+   "dir" : [ "testDir", "myDir" ],
    "exclude_dirs" : [ "anotherDir" ]
 }
 ```
+Here *"dir"* specifies the directories to be preprocessed. Other directories in your proejct will be left as they are. Leave this empty ([]) if you want to preprocess all directories. *"D"* specifies defined  (and undefined, if they are *false*) directives. *exclude_dirs* specifies directories key names to exclude.
 Then you just run `simple-preprocessor` in the directory with the `simp-prep-config.json` file.
+### 0.4 Update
+You can now specify several directories as input to the *-dir* command. This also relates to the *dir* property of the config file. In case of config file, you can now specify an array of strings (representing relative directory paths), instead of a single string. See examples above, they all now use this new feature.
 ### Old syntax
 Old syntax with `//SIMP_PREP DIRECTIVE` and `//SIMP_PREP_END DIRECTIVE` is still supported, but deprecated. Please, use new syntax.
 ### Nested directives
