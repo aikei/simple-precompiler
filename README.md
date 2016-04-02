@@ -46,7 +46,7 @@ If you don't want to compile this block of code, then don't include this directi
 ```
 simple-preprocessor
 ```
-In this case, the result of the preprocessing will be a file with the same name but with the `TEST` block commented out, and the else block uncommented:
+In this case, the result of the preprocessing will be a file with the same name (don't worry, your original files are cached within the `.simp-prep-cache` directory before the preprocessing) but with the `TEST` block commented out, and the else block uncommented:
 ```javascript
 //ifdef TEST 
 //function TestFunction() 
@@ -93,8 +93,10 @@ It's easier however to create a config file named *simp-prep-config.json* in the
 ```
 Here *"dir"* specifies the directories to be preprocessed. Other directories in your proejct will be left as they are. Leave this empty ([]) if you want to preprocess all directories. *"D"* specifies defined  (and undefined, if they are *false*) directives. *exclude_dirs* specifies directories key names to exclude.
 Then you just run `simple-preprocessor` in the directory with the `simp-prep-config.json` file.
-### 0.4 Update
-You can now specify several directories as input to the *-dir* command. This also relates to the *dir* property of the config file. In case of config file, you can now specify an array of strings (representing relative directory paths), instead of a single string. See examples above, they all now use this new feature.
+### Updates
+- You can now specify several directories as input to the `-dir` command. This also relates to the `dir` property of the config file. In case of config file, you can now specify an array of strings (representing relative directory paths), instead of a single string. See examples above, they all now use this new feature.
+- All your files are now backed up before the preprocessing into the `.simp-prep-cache` directory which is created in the directory where `simple-preprocessor` is called. If something happens during the preprocessing (like sudden power outage while a file is being written to), you can use this cache to restore files.
+- `.simp-prep-cache` and `.git` directories are now excluded by default.
 ### Old syntax
 Old syntax with `//SIMP_PREP DIRECTIVE` and `//SIMP_PREP_END DIRECTIVE` is still supported, but deprecated. Please, use new syntax.
 ### Nested directives
