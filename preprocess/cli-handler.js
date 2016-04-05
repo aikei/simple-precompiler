@@ -1,16 +1,17 @@
 'use strict';
 
-module.exports = HandleCliArgs;
+module.exports = HandleCliArgs
 
-const Misc = require('../misc.js');
-const fs = require('fs');
+const Misc = require('../misc.js')
+const fs = require('fs')
 
 var args = 
 { 
 	directives : {},
 	dirsToWalk : [],
 	excludeDirs : [ 'node_modules', '.simp-prep-cache', '.git' ],
-	backUpDir : ".simp-prep-cache/"
+	backUpDir : ".simp-prep-cache/",
+	config: "simp-prep-config.json"
 }
 
 function HandleCliArgs() 
@@ -33,6 +34,16 @@ function HandleCliArgs()
 		CreateConfig()
 		process.exit()
 	}
+	else if (process.argv[2] === "-config")
+	{
+		if (process.argv.length <= 3 ||  process.argv[3].charAt(0) === '-')
+		{
+			Misc.log('Error! No filename specified after -config')
+			process.exit()
+		}
+		args.config = process.argv[3];
+		return args;
+	}	
 
 	for (var i = 2; i < process.argv.length; i++)
 	{

@@ -6,7 +6,7 @@ const Misc = require('../misc.js')
 
 const isWin = (process.platform === "win32")
 
-module.exports = CheckDirAndBackup;
+module.exports = CheckDirAndBackup
 
 //backup all files to be preprocessed
 function CheckDirAndBackup(args,callback)
@@ -72,7 +72,9 @@ function Backup(args,callback)
                      next()
                   }
                })
-            } else {
+            } 
+            else 
+            {
                next()
             }
             
@@ -82,8 +84,8 @@ function Backup(args,callback)
          {
             nodeStatsArray.forEach(function(n)
             {
-               console.error("[ERROR] "+n.name)
-               console.error(n.error.message || (n.error.code + ": " + n.error.path))
+               Misc.error("[ERROR] "+n.name)
+               Misc.error(n.error.message || (n.error.code + ": " + n.error.path))
             })
             next()
          })

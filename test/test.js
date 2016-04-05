@@ -26,7 +26,7 @@ var dir2file = require(dir2fileName)
 var dir3fileName = './testDir3/dirfile.js'
 var dir3file = require(dir3fileName)
 
-function ExecuteTest(number, explain, command, testFile, fileResult, dirFileResult, dir2FileResult, dir3FileResult)
+function ExecuteTest(number, explain, command, testFile, fileResult, dirFileResult, dir2FileResult, dir3FileResult, configFileName)
 {
    console.log("Test",number,explain)
    child_process.execSync(preprocessCmd)  //clears files to exclude all directives before the test
@@ -37,10 +37,14 @@ function ExecuteTest(number, explain, command, testFile, fileResult, dirFileResu
    }
    else if (testFile)
    {
+      var fileName = configFileName || 'simp-prep-config.json'
       testFile = fs.readFileSync(testFile)
-      fs.writeFileSync('simp-prep-config.json',testFile)
-      child_process.execSync(preprocessCmd)
-      fs.unlinkSync('simp-prep-config.json')
+      fs.writeFileSync(fileName,testFile)
+      if (configFileName)
+         child_process.execSync(preprocessCmd+"-config "+fileName)
+      else
+         child_process.execSync(preprocessCmd)
+      fs.unlinkSync(fileName)
    }
    else
    {
@@ -76,6 +80,7 @@ ExecuteTest(5,"config file with { 'D' : { 'TEST' : true }, 'exclude_dirs' : [ 't
 ExecuteTest(6,"config file with { 'D' : { 'RELEASE' : true }, 'dir' : 'test/testDir' }", null,"test/simp-prep-config-test-D-dir.json", "NONE", "RELEASE")
 ExecuteTest(7,"command line with -D IFTEST", "-D IFTEST",null, "IFTEST", "NONE")
 ExecuteTest(8,"command line with -D TEST -dir test/testDir2 test/testDir","-D TEST -dir test/testDir2 test/testDir",null,"NONE","TEST","TEST","NONE")
+ExecuteTest(9,"config file with { 'D' : { 'TEST' : true } } and -config filename", null,"test/simp-prep-config-test-D.json", "TEST", "TEST", undefined, undefined, "conf.json")
 
 //clean test files to defaults
 child_process.execSync(preprocessCmd)

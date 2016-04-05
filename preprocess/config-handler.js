@@ -7,9 +7,10 @@ module.exports = HandleConfig;
 
 function HandleConfig(args)
 {
+   args.excludeDirs = []
    try
    {
-      var config = fs.readFileSync('./simp-prep-config.json')
+      var config = fs.readFileSync(args.config)
       try
       {
          config = JSON.parse(config)
