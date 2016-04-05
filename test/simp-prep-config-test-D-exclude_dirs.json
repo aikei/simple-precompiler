@@ -4,5 +4,5 @@
       "TEST" : true,
       "RELEASE" : false
    },
-   "exclude_dirs" : [ "testDir" ]
+   "exclude_dirs" : [ "testDir", "node_modules", ".simp-prep-cache", ".git" ]
 }

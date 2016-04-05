@@ -7,7 +7,6 @@ module.exports = HandleConfig;
 
 function HandleConfig(args)
 {
-   args.excludeDirs = []
    try
    {
       var config = fs.readFileSync(args.config)

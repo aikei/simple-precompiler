@@ -34,7 +34,7 @@ function Backup(args,callback)
    for (var i = 0; i < args.dirsToWalk.length; i++)
    {
       (function(curDir) {
-         var walker = walk.walk(curDir, { followLinks: true, filters : args.excludeDirs })
+         var walker = walk.walk(curDir, { followLinks: false, filters : args.excludeDirs })
 
          walker.on('file', function (root, fileStat, next)
          {
