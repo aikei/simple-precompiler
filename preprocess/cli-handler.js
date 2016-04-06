@@ -43,7 +43,11 @@ function HandleCliArgs()
 		}
 		args.config = process.argv[3];
 		return args;
-	}	
+	}
+	else if (process.argv[2] === "-no-backup")
+	{
+		args.noBackup = true;
+	}
 
 	for (var i = 2; i < process.argv.length; i++)
 	{

@@ -29,6 +29,8 @@ function CheckDirAndBackup(args,callback)
 
 function Backup(args,callback)
 {
+   if (args.noBackup)
+      return;
    Misc.log("backing up all source files to ./.simp-prep-cache/*")
    Misc.log("args = "+JSON.stringify(args))
    for (var i = 0; i < args.dirsToWalk.length; i++)
