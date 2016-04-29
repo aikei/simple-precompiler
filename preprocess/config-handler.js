@@ -25,7 +25,7 @@ function HandleConfig(args)
          
          if (Array.isArray(config.dir))
          {
-            args.dirsToWalk = dirsToWalk.concat(config.dir)
+            args.dirsToWalk = args.dirsToWalk.concat(config.dir)
          }
          else if (typeof config.dir === "string")
          {
