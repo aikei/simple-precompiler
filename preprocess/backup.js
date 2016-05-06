@@ -95,9 +95,9 @@ function Backup(args,callback)
                   fileName = path.join(args.backUpDir,fileName)
                   var dir = path.dirname(fileName)
                   Misc.log('dirname:',dir)
-                  BackupFile(fileName,str)
-                  next()
-                  /*
+                  //BackupFile(fileName,str)
+                  //next()
+
                   try 
                   {
                      fs.accessSync(dir,fs.F_OK)
@@ -112,7 +112,7 @@ function Backup(args,callback)
                      fs.writeFile(fileName,str)
                      next()
                   }
-                  */
+                  
                })
             } 
             else 
