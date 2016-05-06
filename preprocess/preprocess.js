@@ -6,6 +6,8 @@ const walk = require('walk')
 const path = require('path')
 const fs = require('fs')
 
+const Misc = require("../misc.js")
+
 const isWin = (process.platform === "win32")
 
 var foundPresentDirective = false
@@ -37,7 +39,7 @@ function Preprocess(args)
                   fs.readFile(fileName, { enconding : 'utf8' }, function(err, data)
                   {
                      var str = data.toString()
-                     console.log('preprocessing file',fileName)
+                     Misc.log('preprocessing file',fileName)
                      str = PreprocessString(args.directives,str)
                      fs.writeFile(fileName,str)
                   })
@@ -51,8 +53,8 @@ function Preprocess(args)
          {
             nodeStatsArray.forEach(function(n)
             {
-               console.error("[ERROR] "+n.name)
-               console.error(n.error.message || (n.error.code + ": " + n.error.path))
+               Misc.error("[ERROR] "+n.name)
+               Misc.error(n.error.message || (n.error.code + ": " + n.error.path))
             })
             next()
          })
@@ -80,12 +82,12 @@ function PreprocessString(directives,str)
                {
                   if (directives[words[1]])
                   {
-                     console.log('found present ifdef directive',words[1])
+                     Misc.log('found present ifdef directive',words[1])
                      foundPresentDirective = true                 
                   }
                   else
                   {
-                     console.log('found absent ifdef directive',words[1])
+                     Misc.log('found absent ifdef directive',words[1])
                      foundAbsentDirective = true
                   }
                   continue
@@ -96,12 +98,12 @@ function PreprocessString(directives,str)
             {
                if (!directives[words[1])
                {
-                  console.log('found absent ifndef directive',words[1])
+                  Misc.log('found absent ifndef directive',words[1])
                   foundPresentDirective = true
                }
                else
                {
-                  console.log('found present ifndef directive',words[1])
+                  Misc.log('found present ifndef directive',words[1])
                   foundAbsentDirective = true
                }
             }

@@ -14,7 +14,7 @@
 
    var args = HandleCliArgs()
    args = HandleConfig(args)
-   Misc.log("dirsToWalk: "+JSON.stringify(args.dirsToWalk))
+   Misc.say("started preprocessing, dirsToWalk: "+JSON.stringify(args.dirsToWalk));
 
    if (args.dirsToWalk.length === 0)
       args.dirsToWalk.push(".")
@@ -26,7 +26,7 @@
    
    process.on('exit', function()
    {
-      Misc.log('done')
+      Misc.say('All done')
    })
 
 })()

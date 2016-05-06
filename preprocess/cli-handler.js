@@ -95,6 +95,10 @@ function HandleCliArgs()
 				args.directives[process.argv[i]] = true
 			} while (i+1 < process.argv.length && process.argv[i+1].charAt(0) != '-')
 		}
+		else if (process.argv[i] === "-verbose")
+		{
+			Misc.verbose = true
+		}
 	}
 
 	return args

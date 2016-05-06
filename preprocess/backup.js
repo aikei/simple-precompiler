@@ -8,10 +8,9 @@ const isWin = (process.platform === "win32")
 
 module.exports = CheckDirAndBackup
 
-//backup all files to be preprocessed
 function CheckDirAndBackup(args,callback)
 {
-   args.backUpDir = path.resolve(args.backUpDir);
+   args.backUpDir = path.resolve(args.backUpDir)
    Misc.log("args.backUpDir: ",args.backUpDir)
    try
    {
@@ -27,11 +26,46 @@ function CheckDirAndBackup(args,callback)
    }
 }
 
+//backup all files to be preprocessed
+function BackupFile(pathToFile,str)
+{
+   pathToFile = path.resolve(pathToFile)
+   var pathToDir = path.dirname(pathToFile)
+   do
+   {
+      var createdDir = false
+      var dir = pathToDir
+      do
+      {
+         var catched = false
+         try
+         {
+            fs.accessSync(dir,fs.F_OK)
+         }
+         catch(err)
+         {
+            createdDir = true
+            try
+            {
+               fs.mkdirSync(dir)
+            }
+            catch(err)
+            {
+               dir = path.dirname(dir)
+               catched = true
+            }
+         }
+      } while (catched)
+   } while(createdDir)
+   fs.writeFile(pathToFile,str)
+}
+
+
 function Backup(args,callback)
 {
    if (args.noBackup) {
-      callback();
-      return;
+      callback()
+      return
    }
    Misc.log("backing up all source files to ./.simp-prep-cache/*")
    Misc.log("args = "+JSON.stringify(args))
@@ -61,6 +95,9 @@ function Backup(args,callback)
                   fileName = path.join(args.backUpDir,fileName)
                   var dir = path.dirname(fileName)
                   Misc.log('dirname:',dir)
+                  BackupFile(fileName,str)
+                  next()
+                  /*
                   try 
                   {
                      fs.accessSync(dir,fs.F_OK)
@@ -75,6 +112,7 @@ function Backup(args,callback)
                      fs.writeFile(fileName,str)
                      next()
                   }
+                  */
                })
             } 
             else 
