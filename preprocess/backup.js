@@ -37,7 +37,7 @@ function BackupFile(pathToFile,str)
       var dir = pathToDir
       do
       {
-         var catched = false
+         var dirNotCreated = false
          try
          {
             fs.accessSync(dir,fs.F_OK)
@@ -52,10 +52,10 @@ function BackupFile(pathToFile,str)
             catch(err)
             {
                dir = path.dirname(dir)
-               catched = true
+               dirNotCreated = true
             }
          }
-      } while (catched)
+      } while (dirNotCreated)
    } while(createdDir)
    fs.writeFile(pathToFile,str)
 }

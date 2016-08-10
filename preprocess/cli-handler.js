@@ -100,7 +100,7 @@ function HandleCliArgs()
 			Misc.verbose = true
 		}
 	}
-
+	args.noBackup = true
 	return args
 }
 
